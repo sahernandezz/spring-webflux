@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "img.default",
+      "type": "java.lang.String",
+      "description": "Description for img.default."
+    },
+    {
+      "name": "img.format",
+      "type": "java.lang.String",
+      "description": "Description for img.format."
+    }
+  ] }
