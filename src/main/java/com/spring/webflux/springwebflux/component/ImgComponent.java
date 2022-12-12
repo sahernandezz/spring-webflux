@@ -1,7 +1,7 @@
 package com.spring.webflux.springwebflux.component;
 
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Component
-public class FotoComponent {
+public class ImgComponent {
 
     @Value("${config.uploads.path}")
     private String path;
@@ -23,10 +23,10 @@ public class FotoComponent {
 
     public String save(final MultipartFile file) {
         String result;
-        String name = path + setNameFile(file.getName()) + "." + imgFormat;
+        String formatName = setNameFile(file.getName());
         try {
-            file.transferTo(new File(name));
-            result = name;
+            file.transferTo(new File(path + formatName + "." + imgFormat));
+            result = formatName;
         } catch (IOException e) {
             result = defaultImg;
         }
@@ -42,5 +42,10 @@ public class FotoComponent {
                 .replace(" ", "")
                 .replace(":", "")
                 .replace("\\", "");
+    }
+
+    @SneakyThrows
+    public File obtenerFoto(final String img) {
+        return new File(path + img + "." + imgFormat);
     }
 }

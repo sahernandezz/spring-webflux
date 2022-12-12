@@ -19,6 +19,7 @@ import java.util.*;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 @RestControllerAdvice
+
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
@@ -55,8 +56,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         for (FieldError error : list) {
             if (details.stream().filter(e -> e.getField().equals(error.getField())).toList().isEmpty()) {
                 ErrorParam param = new ErrorParam(error.getField(),
-                        list.stream().filter(e ->
-                                        e.getField().equals(error.getField())).toList().stream()
+                        list.stream().filter(e -> e.getField().equals(error.getField())).toList().stream()
                                 .map(DefaultMessageSourceResolvable::getDefaultMessage).toList());
                 details.add(param);
             }
