@@ -2,8 +2,8 @@ package com.spring.webflux.springwebflux.rest;
 
 import com.spring.webflux.springwebflux.dto.ErrorParam;
 import com.spring.webflux.springwebflux.dto.ErrorResponse;
+import com.spring.webflux.springwebflux.dto.ItemError;
 import com.spring.webflux.springwebflux.exception.RecordNotFoundException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -55,10 +55,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         List<ErrorParam> details = new ArrayList<>();
         for (FieldError error : list) {
             if (details.stream().filter(e -> e.getField().equals(error.getField())).toList().isEmpty()) {
-                ErrorParam param = new ErrorParam(error.getField(),
-                        list.stream().filter(e -> e.getField().equals(error.getField())).toList().stream()
-                                .map(DefaultMessageSourceResolvable::getDefaultMessage).toList());
-                details.add(param);
+                details.add(new ErrorParam(error.getField(),
+                        list.stream().filter(e -> e.getField().equals(error.getField())).toList().stream().map(
+                                a -> new ItemError(a.getCode(), a.getDefaultMessage())).toList()));
             }
         }
         return details;

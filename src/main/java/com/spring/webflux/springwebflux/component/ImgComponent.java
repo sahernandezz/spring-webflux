@@ -1,13 +1,19 @@
 package com.spring.webflux.springwebflux.component;
 
+import com.spring.webflux.springwebflux.exception.RecordNotFoundException;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.base64.Base64;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.UUID;
+
+import static java.nio.file.Files.readAllBytes;
 
 @Component
 public class ImgComponent {
@@ -44,8 +50,14 @@ public class ImgComponent {
                 .replace("\\", "");
     }
 
-    @SneakyThrows
-    public File obtenerFoto(final String img) {
-        return new File(path + img + "." + imgFormat);
+    public String obtenerFoto(final String img) {
+        File file = new File(this.path + img + "." + this.imgFormat);
+        byte[] fileContent;
+        try {
+            fileContent = FileUtils.readFileToByteArray(file);
+        } catch (IOException e) {
+            throw new RecordNotFoundException("No se pudo encontrar la imagen");
+        }
+        return Base64.encode(Unpooled.wrappedBuffer(fileContent)).toString();
     }
 }

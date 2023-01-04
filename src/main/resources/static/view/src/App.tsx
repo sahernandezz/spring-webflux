@@ -9,7 +9,9 @@ function App() {
     const img = async () => {
         await imagenCliente("748eb65e-3662-4784-b4fa-cf069d4a6c5f-file").then((response: any) => {
             let data: string = response.data;
-            setImagen(data);
+            let image = new Image();
+            image.src = data;
+
         });
     }
 
@@ -19,7 +21,7 @@ function App() {
 
     return (
         <Fragment>
-           <img src={imagen} alt="img" width={300} height={280}/>
+            <img src={imagen} alt="img" width={300} height={280}/>
         </Fragment>
     )
 }

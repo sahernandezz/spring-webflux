@@ -56,6 +56,6 @@ public class ClienteRest {
     @Async
     @GetMapping(value = "/img/{img}")
     ResponseEntity<?> imagenCliente(@PathVariable("img") final String img) {
-        return ResponseEntity.ok().body(imgComponent.obtenerFoto(img));
+        return ResponseEntity.ok().body(this.imgComponent.obtenerFoto(img));
     }
 }

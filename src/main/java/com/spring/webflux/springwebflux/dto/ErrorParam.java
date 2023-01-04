@@ -8,9 +8,9 @@ import java.util.List;
 public class ErrorParam {
 
     private String field;
-    private List<String> messages;
+    private List<ItemError> messages;
 
-    public ErrorParam(String field, List<String> messages) {
+    public ErrorParam(String field, List<ItemError> messages) {
         this.field = field;
         this.messages = messages;
     }
