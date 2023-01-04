@@ -30,7 +30,7 @@ public class ClienteRest {
 
     @Async
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE)
-    Mono<ResponseEntity<?>> registrarCliente(@RequestBody @Valid final Cliente cliente) {
+    protected Mono<ResponseEntity<?>> registrarCliente(@RequestBody @Valid final Cliente cliente) {
         cliente.setFoto(imgComponent.defaultImg());
         return this.clienteService.save(cliente).flatMap(c -> Mono.just(ResponseEntity.ok()
                 .body("Cliente registrado correctamente")));
@@ -38,7 +38,7 @@ public class ClienteRest {
 
     @Async
     @PutMapping(value = "/img/{id_cliente}", consumes = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    Mono<ResponseEntity<?>> cambiarImagenCliente(@PathVariable("id_cliente") final String idCliente, @RequestPart final MultipartFile file) {
+    protected Mono<ResponseEntity<?>> cambiarImagenCliente(@PathVariable("id_cliente") final String idCliente, @RequestPart final MultipartFile file) {
         return this.clienteService.findById(idCliente).flatMap(c -> {
             c.setFoto(imgComponent.save(file));
             return this.clienteService.save(c).flatMap(cc -> Mono.just(ResponseEntity.ok()
@@ -48,14 +48,14 @@ public class ClienteRest {
 
     @Async
     @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    Mono<ResponseEntity<Flux<Cliente>>> listarClientes() {
+    protected Mono<ResponseEntity<Flux<Cliente>>> listarClientes() {
         return Mono.just(ResponseEntity.ok()
                 .body(this.clienteService.findAll()));
     }
 
     @Async
     @GetMapping(value = "/img/{img}")
-    ResponseEntity<?> imagenCliente(@PathVariable("img") final String img) {
+    protected ResponseEntity<?> imagenCliente(@PathVariable("img") final String img) {
         return ResponseEntity.ok().body(this.imgComponent.obtenerFoto(img));
     }
 }

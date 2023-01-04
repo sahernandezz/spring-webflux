@@ -17,47 +17,65 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.*;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
 @RestControllerAdvice
-
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Handle MethodArgumentNotValidException. Triggered when an object fails @Valid
+     *
+     * @param ex the MethodArgumentNotValidException that is thrown when @Valid
+     * @return the ErrorParam object
+     */
     @ExceptionHandler(Exception.class)
-    ResponseEntity<Object> handleAllExceptions(Exception ex) {
+    protected ResponseEntity<Object> handleAllExceptions(final Exception ex) {
         List<Object> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = ErrorResponse.getInstancia("Server Error", details);
-        return ResponseEntity.internalServerError()
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(error);
+        return ResponseEntity.internalServerError().contentType(MediaType.APPLICATION_JSON_UTF8).body(error);
     }
 
+    /**
+     * Maneja la excepción RecordNotFoundException
+     *
+     * @param ex Excepción
+     * @return ResponseEntity
+     */
     @ExceptionHandler(RecordNotFoundException.class)
-    ResponseEntity<Object> handleUserNotFoundException(RecordNotFoundException ex) {
+    protected ResponseEntity<Object> handleUserNotFoundException(final RecordNotFoundException ex) {
         List<Object> details = new ArrayList<>();
         details.add(ex.getLocalizedMessage());
         ErrorResponse error = ErrorResponse.getInstancia("Record Not Found", details);
-        return ResponseEntity.internalServerError()
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(error);
+        return ResponseEntity.internalServerError().contentType(MediaType.APPLICATION_JSON_UTF8).body(error);
     }
 
+    /**
+     * This exception is thrown when method argument is not the expected type.
+     *
+     * @param ex      the exception to handle
+     * @param headers the headers to be written to the response
+     * @param status  the selected response status
+     * @param request the current request
+     * @return a {@code ResponseEntity} instance
+     */
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatusCode status, final WebRequest request) {
         ErrorResponse error = ErrorResponse.getInstancia("Validation Failed", details(ex.getBindingResult().getFieldErrors()));
-        return ResponseEntity.badRequest()
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .body(error);
+        return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON_UTF8).body(error);
     }
 
+    /**
+     * Custom error response
+     *
+     * @param list of field errors
+     * @return list of error params
+     */
     private List<ErrorParam> details(final List<FieldError> list) {
         List<ErrorParam> details = new ArrayList<>();
         for (FieldError error : list) {
-            if (details.stream().filter(e -> e.getField().equals(error.getField())).toList().isEmpty()) {
-                details.add(new ErrorParam(error.getField(),
-                        list.stream().filter(e -> e.getField().equals(error.getField())).toList().stream().map(
-                                a -> new ItemError(a.getCode(), a.getDefaultMessage())).toList()));
+            if (details.stream().filter(e -> e.getField().equals(error.getField())).toList().isEmpty()) {// is not in the list
+                details.add(new ErrorParam(error.getField(), list.stream().filter(e -> e.getField()
+                        .equals(error.getField())).toList().stream().map(a -> new ItemError(a.getCode(), a.getDefaultMessage())).toList()));
             }
         }
         return details;
