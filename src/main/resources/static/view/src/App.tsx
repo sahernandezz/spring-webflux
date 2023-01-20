@@ -1,27 +1,35 @@
 import {Fragment, useEffect, useState} from 'react'
 import './App.css'
-import {imagenCliente} from "./service/ClienteService";
+import Item from './components/item/Item'
+import ItemPreload from "./components/item/ItemPreload";
 
 function App() {
 
-    const [imagen, setImagen] = useState<any>(null);
-
-    const img = async () => {
-        await imagenCliente("748eb65e-3662-4784-b4fa-cf069d4a6c5f-file").then((response: any) => {
-            let data: string = response.data;
-            let image = new Image();
-            image.src = data;
-
-        });
-    }
+    const [items, setItems] = useState<any[]>([]);
 
     useEffect(() => {
-        img().then(() => null);
+        const listPreLoad: any[] = [];
+        for (let i = 0; i < 10; i++) {
+            listPreLoad.push(<ItemPreload/>);
+        }
+        setItems(listPreLoad);
+
+        const listI: any[] = [];
+        setTimeout(() => {
+            for (let i = 0; i < 10; i++) {
+                listI.push(<Item/>);
+            }
+            setItems(listI);
+        }, 3000);
+
     }, []);
+
 
     return (
         <Fragment>
-            <img src={imagen} alt="img" width={300} height={280}/>
+            <div className="grid grid-cols-5 gap-5 m-7">
+                {items}
+            </div>
         </Fragment>
     )
 }
