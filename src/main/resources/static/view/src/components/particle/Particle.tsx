@@ -43,6 +43,8 @@ const Particle = (props: OptionsParticle) => {
 
     const {innerWidth, innerHeight} = useWindowSize();
 
+    const particles: number = props.maxParticles != null ? props.maxParticles : 4000;
+
     return (
         <ParticleImage
             src={props.url}
@@ -50,7 +52,7 @@ const Particle = (props: OptionsParticle) => {
             height={props.height != null ? props.height : Number(innerHeight)}
             scale={props.scale != null ? Number(innerWidth) - 9 > 1000 ? props.scale : 0.20 : Number(innerWidth) - 9 > 1000 ? 0.35 : 0.20}
             entropy={props.entropy != null ? props.entropy : 20}
-            maxParticles={props.maxParticles != null ? props.maxParticles : 4000}
+            maxParticles={Number(innerWidth) - 9 > 1000 ? particles : particles / 2}
             particleOptions={particleOptions}
             mouseMoveForce={motionForce}
             touchMoveForce={motionForce}

@@ -7,19 +7,18 @@ import Particle from "./components/particle/Particle";
 function App() {
 
     const [items, setItems] = useState<any[]>([]);
-    const [time, setTime] = useState<string>('');
 
     useEffect(() => {
         const listPreLoad: any[] = [];
         for (let i = 0; i < 10; i++) {
-            listPreLoad.push(<ItemPreload/>);
+            listPreLoad.push(<ItemPreload key={i}/>);
         }
         setItems(listPreLoad);
 
         const listI: any[] = [];
         setTimeout(() => {
             for (let i = 0; i < 10; i++) {
-                listI.push(<Item/>);
+                listI.push(<Item key={i}/>);
             }
             setItems(listI);
         }, 5000);
@@ -34,11 +33,9 @@ function App() {
                     height={500}
                     scale={0.55}
                     entropy={15}
-                    maxParticles={10000}
                 />
-                <h1>{time}</h1>
             </div>
-            <div className="grid grid-cols-5 gap-5 m-7">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-5 m-7">
                 {items}
             </div>
         </Fragment>
