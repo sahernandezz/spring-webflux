@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
-    private ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
 
     @Autowired
     public ClienteServiceImpl(final ClienteRepository clienteRepository) {
